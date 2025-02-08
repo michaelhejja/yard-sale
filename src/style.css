@@ -114,6 +114,16 @@ button:focus-visible {
   }
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: var(--black-1);
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: var(--black-1);
+  }
+}
+
 
 /* Animations! */
 @keyframes mahomes-wiggle {
