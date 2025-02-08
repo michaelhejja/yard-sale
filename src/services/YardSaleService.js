@@ -14,6 +14,12 @@ class YardSaleService {
       currentDiscount: currentDiscount
     })
   }
+
+  sendMessage(message) {
+    return http.post(`/customMessage`, {
+      message: message
+    })
+  }
 }
 
 export default new YardSaleService()

@@ -8,6 +8,7 @@ const showComingSoon = ref(false)
 const currentProductIndex = ref(0)
 const currentDiscount = ref(0)
 const products = ref([])
+const customMessage = ref('')
 
 onMounted(() => {
   getData()
@@ -35,6 +36,13 @@ function saveChanges() {
   YardSaleService.updateAppState(isActive.value, canPurchase.value, showComingSoon.value, currentProductIndex.value, currentDiscount.value)
 }
 
+function sendMessage() {
+  if (customMessage.value.length > 2) {
+    console.log(customMessage.value)
+    YardSaleService.sendMessage(customMessage.value)
+  }
+}
+
 </script>
 
 <template>
@@ -60,8 +68,14 @@ function saveChanges() {
         <label>Current Discount</label>
         <input v-model="currentDiscount" type="number" />
     </div>
-
     <button class="btn-save" @click="saveChanges()">Save Changes</button>
+    <div class="form-row message">
+        <div class="message">
+          <label>Custom Message</label>
+          <input class="message" v-model="customMessage" type="text" />
+        </div>
+        <button class="btn-message" @click="sendMessage()">Send</button>
+    </div>
 
     <div class="products-container">
       <div v-for="(product, index) in products" :key="`product_${index}`" class="product">
@@ -88,9 +102,12 @@ h1 {
 
 .form-row {
     font-size: 26px;
-    margin-bottom: 20px;
-    padding-bottom: 25px;
+    margin-bottom: 10px;
+    padding-bottom: 15px;
     border-bottom: 2px dashed var(--black-1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
     label {
         margin-right: 15px;
@@ -104,10 +121,18 @@ h1 {
         width: 80px;
         font-size: 26px;
     }
+
+    &.message {
+      padding-top: 15px;
+      border-top: 2px dashed var(--black-1);
+      margin-top: 30px;
+    }
 }
 
 .products-container {
   margin-top: 65px;
+
+
 }
 
 .product {
@@ -124,6 +149,24 @@ h1 {
   border: 2px solid var(--black-1);
   text-wrap: nowrap;
   width: 100%;
+  padding: 5px 15px;
+  margin-top: 10px;
+}
+
+.message {
+  font-size: 26px;
+  width: 100%;
+  margin-right: 20px;
+}
+
+.btn-message {
+  font-size: 22px;
+  background-color: var(--green-1);
+  border-radius: 10px;
+  border: 2px solid var(--black-1);
+  text-wrap: nowrap;
+  width: 100px;
+  height: 60px;
   padding: 5px 15px;
   margin-top: 10px;
 }

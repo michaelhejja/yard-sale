@@ -33,6 +33,11 @@ const lockedProductIndex = ref(0)
 const lockedDiscount = ref(0)
 const termsAgreed = ref(false)
 
+// Custom Message
+const customMessage = ref('')
+const customMessageColor = ref('red')
+const showCustomMessage = ref(false)
+
 const currentProductOrder = computed(() => {
   if (products.value.length === 0) {
     return null
@@ -118,6 +123,10 @@ function createSocketConnection() {
     else if (obj.type === 'orders') {
       console.log(obj.message)
       orders.value = obj.message
+    } else if (obj.type === 'customMessage') {
+      console.log('MESSSAGE!', obj.message)
+      customMessage.value = obj.message
+      displayCustomMessage()
     }
   })
 
@@ -159,6 +168,22 @@ function saveEmail(email) {
   ws.value.send(JSON.stringify(obj))
 }
 
+function displayCustomMessage() {
+  const rand = Math.random()
+  if (rand < 0.33) {
+    customMessageColor.value = 'green'
+  } else if (rand < 0.66) {
+    customMessageColor.value = 'red'
+  } else {
+    customMessageColor.value = 'orange'
+  }
+
+  showCustomMessage.value = true
+  setTimeout(() => {
+    showCustomMessage.value = false
+  }, 4000)
+}
+
 function agreeToTerms() {
   termsAgreed.value = true
 }
@@ -175,6 +200,11 @@ function backClicked() {
 <template>
   <div class="content">
     <EmailGate v-if="!userEmail" @submitEmail="saveEmail" />
+
+    <Transition name="flip">
+      <div v-if="showCustomMessage" class="custom-message" :class="customMessageColor">{{ customMessage }}</div>
+    </Transition>
+
     <div class="texture-overlay"></div>
     <ComingSoon v-if="showComingSoon" />
     <LiveHeader :state="appState"/>
@@ -755,6 +785,29 @@ function backClicked() {
   }
   100% {
     transform: translate(0, 0)
+  }
+}
+
+.custom-message {
+  position: fixed;
+  width: 86%;
+  top: 50px;
+  left: 0;
+  margin-left: 3%;
+  background-color: var(--green-1);
+  border-radius: 10px;
+  border: 2px solid var(--black-1);
+  font-size: 28px;
+  padding: 15px 3%;
+  z-index: 100;
+  text-align: center;
+
+  &.orange {
+    background-color: var(--orange-1);
+  }
+
+  &.red {
+    background-color: var(--red-1);
   }
 }
 </style>
