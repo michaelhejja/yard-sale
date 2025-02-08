@@ -106,14 +106,11 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
+    color: var(--black-1);
     background-color: #ffffff;
   }
   a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+    color: var(--black-1);
   }
 }
 
@@ -176,6 +173,27 @@ button:focus-visible {
   }
   80% {
     transform: scale(1.1) translate(0, 0) rotateZ(-7deg);
+  }
+  100% {
+    transform: scale(1) translate(0, 0) rotateZ(0deg);
+  }
+}
+
+@keyframes float-2 {
+  0% {
+    transform: scale(1) translate(0, 0) rotateZ(0deg);
+  }
+  20% {
+    transform: scale(1.02) translate(0, 0) rotateZ(-3deg);
+  }
+  40% {
+    transform: scale(1) translate(0, 0) rotateZ(8deg);
+  }
+  60% {
+    transform: scale(0.98) translate(0, 0) rotateZ(-1deg);
+  }
+  80% {
+    transform: scale(1.1) translate(0, 0) rotateZ(7deg);
   }
   100% {
     transform: scale(1) translate(0, 0) rotateZ(0deg);

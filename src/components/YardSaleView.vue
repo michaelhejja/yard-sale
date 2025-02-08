@@ -201,7 +201,7 @@ function backClicked() {
         <div v-if="appState === 'live' && products.length > 0" class="product-container" :class="{'bgclear': showComingSoon}">
           <div class="product-name">{{ products[currentProductIndex].name }}:</div>
           <div class="product">
-            <img :src="`/${products[currentProductIndex].image}`" class="product-image" alt="product" />
+            <img :src="`/${products[currentProductIndex].image}`" class="product-image" :class="{'grey': showComingSoon}" alt="product" />
           </div>
           <div class="product-description">{{ products[currentProductIndex].description }}</div>
           <div class="price-container">
@@ -210,7 +210,7 @@ function backClicked() {
                 THIS WAS
               </div>
               <div class="price-value">
-                ${{ products[currentProductIndex].price }}
+                ${{ products[currentProductIndex].price.toFixed(2) }}
               </div>
             </div>
             <div class="divider"></div>
@@ -357,15 +357,16 @@ function backClicked() {
 .current-discount-percent-label {
   position: absolute;
   z-index: 6;
-  width: 106%;
+  width: 115%;
   height: 150px;
-  top: -42px;
-  left: 6px;
+  top: -58px;
+  left: -10px;
   transform: rotate(-15deg);
   font-family: "ITC Souvenir";
   font-size: 37.6px;
-  font-style: italic;
-  font-weight: 700;
+  font-weight: 600;
+  line-height: 0.9;
+  padding-top: 17px;
   animation: float 40s linear infinite;
 
   @media only screen and (max-width: 429px) {
@@ -375,7 +376,7 @@ function backClicked() {
   &::after {
     content: '';
     position: absolute;
-    background-image: url('/star.svg');
+    background-image: url('/star-beige-2.png');
     background-repeat: no-repeat;
     background-size: contain;
     width: 100%;
@@ -385,26 +386,13 @@ function backClicked() {
     left: -1px;
   }
 
-  &::before {
-    content: '';
-    position: absolute;
-    background-image: url('/star-shadow.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
-    width: 100%;
-    height: 170%;
-    z-index: -2;
-    top: -14%;
-    left: -3px;
-  }
-
   &.locked {
-    width: 50%;
-    top: 12%;
-    left: 4%;
+    width: 52%;
+    top: 5%;
+    left: -1%;
 
     &::after {
-      background-image: url('/star-green.svg');
+      background-image: url('/star-green-2.svg');
     }
   }
 }
@@ -522,6 +510,10 @@ function backClicked() {
   width: 100%;
   height: auto;
   max-height: 600px;
+
+  &.grey {
+    filter: grayscale(1);
+  }
 }
 
 .product-description {
@@ -613,8 +605,8 @@ function backClicked() {
   .floaty-1 {
     background-color: var(--red-1);
     top: 90px;
-    left: 0;
-    animation: float 10s linear infinite;
+    left: 15;
+    animation: float-2 10s linear infinite;
   }
 
   .floaty-2 {

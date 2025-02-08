@@ -43,6 +43,10 @@ function goToFaqs() {
   router.push('/faqs')
 }
 
+function goToProducts() {
+  router.push('/products')
+}
+
 </script>
 
 <template>
@@ -61,7 +65,7 @@ function goToFaqs() {
 
     <button @click="goToSale()" class="btn-letsgo"></button>
 
-    <div class="floaty-container">
+    <div class="floaty-container" @click="goToProducts()">
         <div class="floaty"><img src="/arrow-1.png"/></div>
         <div class="floaty"><img src="/home-floaty.png"/></div>
         <div class="floaty"><img src="/arrow-2.png"/></div>
