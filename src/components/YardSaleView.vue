@@ -68,7 +68,7 @@ const currentProductSoldOut = computed(() => {
 })
 
 onMounted(() => {
-  const wssWebSocket = new WebSocket('ws://yard-sale-server-6f9e6e59ab49.herokuapp.com/')
+  const wssWebSocket = new WebSocket('wss://yard-sale-server-6f9e6e59ab49.herokuapp.com/')
   ws.value = wssWebSocket
 
   // Get the fingerprint ID for the user
