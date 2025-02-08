@@ -8,12 +8,14 @@ import YardSaleView from './components/YardSaleView.vue'
 import Dashboard from './components/DashboardView.vue'
 import Products from './components/ProductsView.vue'
 import TermsView from './components/TermsView.vue'
+import FaqView from './components/FaqView.vue'
 
 const routes = [
   { path: '/', component: HomeView },
   { path: '/yardsale', component: YardSaleView },
   { path: '/products', component: Products },
   { path: '/terms', component: TermsView },
+  { path: '/faqs', component: FaqView },
   { path: '/dashboard', component: Dashboard },
 ]
 

@@ -13,12 +13,16 @@
   -moz-osx-font-smoothing: grayscale;
 
   --black-1: #262623;
+  --black-2: #101010;
   --red-1: #ED3A3A;
   --green-1: #6AFF49;
   --orange-1: #FFDB49;
   --beige-1: #F5F5E8;
 
   --max-width: 450px;
+  
+  --half-height: 30px;
+  --border-radius: 6px;
 }
 
 @font-face {
@@ -87,10 +91,6 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-.card {
-  padding: 2em;
 }
 
 #app {
