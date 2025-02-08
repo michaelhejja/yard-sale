@@ -71,9 +71,10 @@ onMounted(() => {
   const wssWebSocket = new WebSocket('wss://yard-sale-server-6f9e6e59ab49.herokuapp.com/')
   ws.value = wssWebSocket
 
-  // Get the fingerprint ID for the user
-  var fpPromise = FingerprintJS.load()
-  fpPromise
+  wssWebSocket.addEventListener("open", (event) => {
+    // Get the fingerprint ID for the user
+    var fpPromise = FingerprintJS.load()
+    fpPromise
     .then(fp => fp.get())
     .then(result => {
       // This is the visitor identifier:
@@ -85,8 +86,13 @@ onMounted(() => {
         type: 'userid',
         message: visitorId
       }
+
+      // Wait for connecting state
       wssWebSocket.send(JSON.stringify(greet))
     })
+  })
+
+  
 
   // Listen for websocket messages
   wssWebSocket.addEventListener("message", (event) => {
