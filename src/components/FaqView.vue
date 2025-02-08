@@ -88,8 +88,21 @@ function productsClicked() {
   background-size: cover;
 }
 
+.banner {
+  object-fit: contain;
+
+  img {
+    width: 100%;
+  }
+}
+
 .terms {
   width: 87%;
+
+  @media only screen and (max-width: 429px) {
+    width: 89%;
+  }
+
   min-height: 100vh;
   margin: 0 auto;
   padding-top: 30px;
@@ -162,6 +175,10 @@ ul {
 
   &.green {
     background-color: var(--green-1);
+  }
+
+  @media only screen and (max-width: 429px) {
+    font-size: 38px;
   }
 }
 </style>

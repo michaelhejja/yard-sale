@@ -106,6 +106,14 @@ function productsClicked() {
   text-align: left;
 }
 
+.banner {
+  object-fit: contain;
+
+  img {
+    width: 100%;
+  }
+}
+
 .title {
   font-size: 18px;
   text-transform: uppercase;
@@ -171,6 +179,10 @@ ul {
 
   &.green {
     background-color: var(--green-1);
+  }
+
+  @media only screen and (max-width: 429px) {
+    font-size: 38px;
   }
 }
 </style>

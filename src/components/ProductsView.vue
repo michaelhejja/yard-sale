@@ -18,7 +18,7 @@ onMounted(() => {
 
   setTimeout(() => {
     showInfo.value = false
-  }, 8000)
+  }, 5000)
 })
 
 function openModal(index) {
@@ -32,7 +32,7 @@ function closeModal(index) {
 }
 
 function goBack() {
-  router.push('/yardsale')
+  router.back()
 }
 
 </script>

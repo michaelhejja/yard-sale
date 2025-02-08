@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import CountDown from './CountDown.vue'
 import MahomesHeader from './MahomesHeader.vue'
@@ -7,13 +7,33 @@ import YardSaleService from '../services/YardSaleService'
 
 const router = useRouter()
 const products = ref([])
+const saleStarted = ref(false)
+
+const startTime = new Date(1739143800000)
+// const startTime = new Date(1739032200000)
+let countInterval
 
 onMounted(() => {
   YardSaleService.getAppState()
   .then((result) => {
     products.value = result.data.products
   })
+
+  checkSaleStarted()
+  countInterval = setInterval(() => {
+    checkSaleStarted()
+  }, 1000)
 })
+
+onUnmounted(() => {
+  clearInterval(countInterval)
+})
+
+function checkSaleStarted() {
+  const now = Date.now()
+  saleStarted.value = now > startTime
+  console.log('Have we Started?', now > startTime)
+}
 
 function goToSale() {
   router.push('/yardsale')
@@ -28,20 +48,10 @@ function goToFaqs() {
 <template>
   <div class="texture-overlay"></div>
   <div class="home">
-    <CountDown />
+    <CountDown v-if="!saleStarted"/>
     <MahomesHeader />
     <div class="home-hero">
-      <div class="image-overlay">
-        <img class="img-overlay jersey" src="/jersey-small.png"/>
-        <img class="img-overlay glasses" src="/glasses-small.png"/>
-        <img class="img-overlay shoe" src="/shoe-small.png"/>
-        <img class="img-overlay taylor" src="/taylor-small.png"/>
-        <img class="img-overlay watch" src="/watch-small.png"/>
-        <img class="img-overlay ketchup" src="/ketchup-small.png"/>
-        <img class="img-overlay grill" src="/grill-small.png"/>
-        <img class="img-overlay football" src="/football-small.png"/>
-      </div>
-      CATCH BIG DEALS ON PATRICK MAHOMES FAVORITE PRODUCTS THIS SUPERBOWL. THE FURTHER HE THROWS, THE MORE <span class="spaced">YOU $$$ SAVE</span>
+      <img class="home-hero-img" src="/home-hero.png" alt="CATCH BIG DEALS ON PATRICK MAHOMES FAVORITE PRODUCTS THIS SUPERBOWL. THE FURTHER HE THROWS, THE MORE YOU $$$ SAVE"/>
     </div>
     <div class="hero-footer">
       <div class="hero-footer-item beige">He Wins</div>
@@ -138,6 +148,11 @@ function goToFaqs() {
 
 .home {
   width: 87%;
+
+  @media only screen and (max-width: 429px) {
+    width: 94%;
+  }
+
   margin: 0 auto;
   padding-top: 30px;
 
@@ -162,8 +177,12 @@ function goToFaqs() {
   padding: 15px 15px 25px 15px;
   text-align: justify;
   word-spacing: 10px;
+  object-fit: contain;
+  img {
+    width: 100%;
+  }
 
-  @media only screen and (max-width: 450px) {
+  @media only screen and (max-width: 431px) {
     font-size: 38px;
   }
 }
@@ -171,7 +190,7 @@ function goToFaqs() {
 .spaced {
   word-spacing: 73px;
 
-  @media only screen and (max-width: 450px) {
+  @media only screen and (max-width: 431px) {
     word-spacing: 69px;
   }
 }
@@ -191,7 +210,7 @@ function goToFaqs() {
 .jersey {
   transform: scale(0.9) translate(170px, 54px);
 
-  @media only screen and (max-width: 450px) {
+  @media only screen and (max-width: 429px) {
     transform: scale(0.9) translate(162px, 54px);
   }
 }
@@ -199,7 +218,7 @@ function goToFaqs() {
 .glasses {
   transform: translate(96px, 135px);
 
-  @media only screen and (max-width: 450px) {
+  @media only screen and (max-width: 429px) {
     transform: translate(94px, 127px);
   }
 }
@@ -207,7 +226,7 @@ function goToFaqs() {
 .shoe {
   transform: translate(55px, 139px);
 
-  @media only screen and (max-width: 450px) {
+  @media only screen and (max-width: 429px) {
     transform: translate(55px, 129px);
   }
 }
@@ -215,7 +234,7 @@ function goToFaqs() {
 .taylor {
   transform: translate(264px, 153px);
 
-  @media only screen and (max-width: 450px) {
+  @media only screen and (max-width: 429px) {
     transform: translate(254px, 143px);
   }
 }
@@ -223,7 +242,7 @@ function goToFaqs() {
 .watch {
   transform: translate(152px, 209px);
 
-  @media only screen and (max-width: 450px) {
+  @media only screen and (max-width: 429px) {
     transform: translate(145px, 200px);
   }
 }
@@ -239,7 +258,7 @@ function goToFaqs() {
 .grill {
   transform: translate(89px, 248px);
 
-  @media only screen and (max-width: 450px) {
+  @media only screen and (max-width: 429px) {
     transform: translate(89px, 240px);
   }
 }
@@ -247,7 +266,7 @@ function goToFaqs() {
 .football {
   transform: translate(226px, 252px);
 
-  @media only screen and (max-width: 450px) {
+  @media only screen and (max-width: 429px) {
     transform: translate(217px, 244px);
   }
 }
@@ -268,7 +287,7 @@ function goToFaqs() {
   border-radius: 6px;
   padding: 4px 20px;
   color: var(--black-2);
-  word-wrap: nowrap;
+  text-wrap: nowrap;
 
   &.beige {
     background-color: var(--beige-1);

@@ -290,6 +290,10 @@ function backClicked() {
   max-width: 600px;
   margin: 0 auto;
   min-height: 100vh;
+
+  @media only screen and (max-width: 429px) {
+    width: 90%;
+  }
 }
 
 .bgclear {
@@ -339,6 +343,10 @@ function backClicked() {
   font-size: 33px;
   text-align: left;
   margin: 15px;
+
+  @media only screen and (max-width: 429px) {
+    font-size: 30px;
+  }
 }
 
 .current-discount-percent {
@@ -359,6 +367,10 @@ function backClicked() {
   font-style: italic;
   font-weight: 700;
   animation: float 40s linear infinite;
+
+  @media only screen and (max-width: 429px) {
+    font-size: 34px;
+  }
 
   &::after {
     content: '';
@@ -468,7 +480,12 @@ function backClicked() {
   bottom: -50px;
   text-align: center;
   transform: rotate(-3deg);
-  left: 23px;
+  left: 9%;
+
+  @media only screen and (max-width: 429px) {
+    left: 6%;
+    font-size: 45px;
+  }
 
   &.red {
     background-color: var(--red-1);
@@ -486,6 +503,10 @@ function backClicked() {
 .locked-message-bottom {
   font-size: 48px;
   text-wrap: nowrap;
+
+  @media only screen and (max-width: 429px) {
+    font-size: 45px;
+  }
 }
 
 .product-name {
@@ -519,7 +540,7 @@ function backClicked() {
   .divider {
     width: 2px;
     height: 65px;
-    margin-top: 5px;
+    margin-top: 0;
     background-color: var(--black-1);
   }
 }
@@ -617,7 +638,11 @@ function backClicked() {
 .all-products-container {
   height:150px; 
   position:relative;
-  margin-bottom: 35px;
+  margin-bottom: 55px;
+
+  @media only screen and (max-width: 429px) {
+    margin-bottom: 55px;
+  }
 }
 
 .product-banner {

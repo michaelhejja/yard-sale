@@ -29,7 +29,7 @@ import { computed, ref } from 'vue'
 <style scoped>
 .coming-soon {
   position: absolute;
-  top: 100px;
+  top: 160px;
   left: 0;
   width: 100vw;
   max-width: var(--max-width);
@@ -38,6 +38,10 @@ import { computed, ref } from 'vue'
   height: 100vh;
   z-index: 200;
   overflow: hidden;
+
+  @media only screen and (max-width: 429px) {
+    margin-left: -195px;
+  }
 }
 
 .sold-sign {
