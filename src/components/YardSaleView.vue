@@ -551,7 +551,7 @@ function backClicked() {
 }
 
 .btn-catch-deal {
-  font-size: 52px;
+  font-size: 48px;
   background-color: var(--green-1);
   border-radius: 10px;
   border: 2px solid var(--black-1);
