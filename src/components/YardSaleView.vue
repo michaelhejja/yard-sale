@@ -22,7 +22,7 @@ const products = ref([])
 const orders = ref([])
 const currentProductIndex = ref(0)
 const canPurchase = ref(true)
-const showComingSoon = ref(true)
+const showComingSoon = ref(false)
 const currentDiscount = ref(null)
 const ws = ref(null)
 
@@ -68,10 +68,14 @@ const currentProductSoldOut = computed(() => {
 })
 
 onMounted(() => {
+  createSocketConnection()
+})
+
+function createSocketConnection() {
   const wssWebSocket = new WebSocket('wss://yard-sale-server-6f9e6e59ab49.herokuapp.com/')
   ws.value = wssWebSocket
 
-  wssWebSocket.addEventListener("open", (event) => {
+  wssWebSocket.addEventListener("open", () => {
     // Get the fingerprint ID for the user
     var fpPromise = FingerprintJS.load()
     fpPromise
@@ -91,8 +95,6 @@ onMounted(() => {
       wssWebSocket.send(JSON.stringify(greet))
     })
   })
-
-  
 
   // Listen for websocket messages
   wssWebSocket.addEventListener("message", (event) => {
@@ -118,7 +120,12 @@ onMounted(() => {
       orders.value = obj.message
     }
   })
-})
+
+  wssWebSocket.addEventListener("close", () => {
+    ws.value = null
+    setTimeout(createSocketConnection, 2000)
+  })
+}
 
 function catchDeal() {
   console.log('CATCH THE DEAL!')
