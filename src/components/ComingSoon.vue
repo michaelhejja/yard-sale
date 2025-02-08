@@ -32,6 +32,9 @@ import { computed, ref } from 'vue'
   top: 100px;
   left: 0;
   width: 100vw;
+  max-width: var(--max-width);
+  left: 50%;
+  margin-left: -215px;
   height: 100vh;
   z-index: 200;
   overflow: hidden;

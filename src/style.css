@@ -17,30 +17,32 @@
   --green-1: #6AFF49;
   --orange-1: #FFDB49;
   --beige-1: #F5F5E8;
+
+  --max-width: 450px;
 }
 
 @font-face {
   font-family: "ITC Souvenir";
   font-weight: 500;
-  src: url(./fonts/itc-souvenir-medium.woff2)format("woff2")
+  src: url(/fonts/itc-souvenir-medium.woff2)format("woff2")
 }
 
 @font-face {
   font-family: "ITC Souvenir";
   font-weight: 600;
-  src: url(./fonts/itc-souvenir-semibold.woff2)format("woff2")
+  src: url(/fonts/itc-souvenir-semibold.woff2)format("woff2")
 }
 
 @font-face {
   font-family: "ITC Souvenir";
   font-weight: 700;
-  src: url(./fonts/itc-souvenir-bold.woff2)format("woff2")
+  src: url(/fonts/itc-souvenir-bold.woff2)format("woff2")
 }
 
 @font-face {
   font-family: "Azo Sans 2";
   font-weight: 900;
-  src: url(./fonts/AzoSans2CondTest-Black.woff2)format("woff2")
+  src: url(/fonts/AzoSans2CondTest-Black.woff2)format("woff2")
 }
 
 a {
@@ -60,19 +62,6 @@ body {
   font-family: "Azo Sans 2";
   line-height: 1;
   background-color: var(--beige-1);
-}
-
-body::before {
-  background-image: url('./pattern.webp');
-  background-repeat: repeat-y;
-  background-size: 100%;
-  content: " ";
-  display: block;
-  height: 100%;
-  opacity: .5;
-  position: absolute;
-  width: 100%;
-  z-index: -1;
 }
 
 h1 {
