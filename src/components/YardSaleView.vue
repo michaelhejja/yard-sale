@@ -379,7 +379,7 @@ function backClicked() {
       <div class="locked-message-bottom">{{ currentProductOrder.wasLocked ? 'There\'s More Coming Up' : 'THERE’S MORE.' }}</div>
     </div>-->
 
-    <div v-if="appState !== 'closed' && !showConfirmation" class="all-products" :class="{'extra-margin': currentProductOrder}">
+    <div v-if="appState !== 'closed' && !showConfirmation && !currentProductOrder" class="all-products" :class="{'extra-margin': currentProductOrder}">
       <div v-if="!currentProductOrder" class="floaty-1">There's More</div>
       <div v-if="!currentProductOrder" class="floaty-2">All Products</div>
       <div class="all-products-title">{{ productsTitle }}</div>
