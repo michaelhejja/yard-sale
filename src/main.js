@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import './style.css'
 import App from './App.vue'
 import { createWebHistory, createRouter } from 'vue-router'
+import store from './store'
 
 import HomeView from './components/HomeView.vue'
 import YardSaleView from './components/YardSaleView.vue'
@@ -31,4 +32,5 @@ const router = createRouter({
 
 createApp(App)
 .use(router)
+.use(store)
 .mount('#app')

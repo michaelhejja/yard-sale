@@ -26,17 +26,18 @@ const title = computed(() => {
 <style scoped>
 .live-header {
   width: 100%;
-  padding: 25px 0 0 0;
-  margin-bottom: 20px;
+  padding: 10px 0 0 0;
+  margin-bottom: -25px;
   color: var(--black-1);
   display: flex;
   justify-content: center;
   text-transform: uppercase;
+  z-index: 10;
 }
 
 .label {
   line-height: 1;
-  font-size: 26px;
+  font-size: 20px;
   background-color: var(--red-1);
   padding: 5px 15px;
   border-radius: 6px;
@@ -55,7 +56,7 @@ const title = computed(() => {
     background-color: var(--black-1);
     position: absolute;
     width: 2px;
-    height: 15px;
+    height: 6px;
     left: 50%;
     top: 0px;
   }

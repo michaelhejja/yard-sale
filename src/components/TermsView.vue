@@ -11,8 +11,6 @@ function backClicked() {
 function productsClicked() {
   router.push('/products')
 }
-
-
 </script>
 
 <template>
@@ -75,7 +73,7 @@ function productsClicked() {
       By participating in Yard Sale, you acknowledge that you have read, understood, and agree to these Terms and Conditions.
     </p>
     <div class="divider"></div>
-    <div class="footer" :class="{'margin' : appState === 'live'}">
+    <div class="footer">
       <button class="btn-back-home" @click="backClicked()">GO BACK</button>
       <button class="btn-back-home green" @click="productsClicked()">ALL ITEMS</button>
     </div>

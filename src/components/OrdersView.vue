@@ -20,7 +20,7 @@ onMounted(() => {
 function getData() {
   YardSaleService.getAllOrders()
   .then(result => {
-    orders.value = result.data
+    orders.value = result.data.reverse()
     console.log(result.data)
   })
 }

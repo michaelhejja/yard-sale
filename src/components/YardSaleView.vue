@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
+import { useStore } from 'vuex'
 import FingerprintJS from '@fingerprintjs/fingerprintjs'
 import LiveHeader from './LiveHeader.vue'
 import EmailGate from './EmailGate.vue'
@@ -9,10 +10,6 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-defineProps({
-  msg: String,
-})
-
 const userID = ref('undefined')
 const userEmail = ref(null)
 const userDatabaseID = ref(null)
@@ -21,9 +18,9 @@ const isActive = ref(true)
 const products = ref([])
 const orders = ref([])
 const currentProductIndex = ref(0)
+const firstProductLoaded = ref(false)
 const canPurchase = ref(true)
 const showComingSoon = ref(false)
-const showConfirmation = ref(false)
 const currentDiscount = ref(null)
 const ws = ref(null)
 
@@ -42,6 +39,9 @@ const showCustomMessage = ref(false)
 // Product Modal Data
 const showModal = ref(false)
 const currentIndex = ref(0)
+
+const store = useStore()
+const showConfirmation = computed(() => store.state.showConfirmation)
 
 const limitedProducts = computed(() => {
   if (products.value.length === 0) {
@@ -91,7 +91,6 @@ const currentProductSoldOut = computed(() => {
 
 const productsTitle = computed(() => {
   if (currentProductOrder.value) {
-    console.log(currentProductOrder)
     return currentProductOrder.value.wasLocked ? 'Details will hit your inbox soon' : 'But don\'t worry...'
   } else {
     return 'We\'ve Got More'
@@ -100,7 +99,6 @@ const productsTitle = computed(() => {
 
 const productsSubtitle = computed(() => {
   if (currentProductOrder.value) {
-    console.log(currentProductOrder)
     return currentProductOrder.value.wasLocked ? 'There\'s More Coming' : 'THERE’S MORE.'
   } else {
     return 'SEE WHAT’S NEXT'
@@ -144,11 +142,20 @@ function createSocketConnection() {
       title.value = obj.message.name
       isActive.value = obj.message.isActive
       products.value = obj.message.products
-      currentProductIndex.value = obj.message.currentProductIndex
-      if (currentProductIndex !== obj.message.currentProductIndex) {
-        showConfirmation.value = false
+      
+      if (currentProductIndex.value !== obj.message.currentProductIndex) {
+        console.log('new product')
+        // store.dispatch.updateShowConfirmation(false)
+        if (firstProductLoaded.value === true) {
+          store.commit('updateShowConfirmation', false)
+        } else {
+          console.log('it\'s the first product')
+          firstProductLoaded.value = true
+        }
+        
         termsAgreed.value = false
       }
+      currentProductIndex.value = obj.message.currentProductIndex
       canPurchase.value = obj.message.canPurchase
       showComingSoon.value = obj.message.showComingSoon
       currentDiscount.value = obj.message.currentDiscount
@@ -160,10 +167,8 @@ function createSocketConnection() {
       userDatabaseID.value = obj.message
     }
     else if (obj.type === 'orders') {
-      console.log(obj.message)
       orders.value = obj.message
     } else if (obj.type === 'customMessage') {
-      console.log('MESSSAGE!', obj.message)
       customMessage.value = obj.message
       displayCustomMessage()
     }
@@ -176,9 +181,8 @@ function createSocketConnection() {
 }
 
 function catchDeal() {
-  console.log('CATCH THE DEAL!')
   window.scrollTo(0, 0)
-  showConfirmation.value = false
+  store.commit('updateShowConfirmation', false)
   termsAgreed.value = false
   productIsLocked.value = true
   lockedProductIndex.value = currentProductIndex.value
@@ -198,7 +202,6 @@ function catchDeal() {
 }
 
 function saveEmail(email) {
-  console.log(email)
 
   const obj = {
     type: 'saveemail',
@@ -228,16 +231,15 @@ function displayCustomMessage() {
 function openModal(index) {
   currentIndex.value = index
   showModal.value = true
-  console.log(products.value[index].name)
 }
 
 function showConfirmationState() {
   window.scrollTo(0, 0)
-  showConfirmation.value = true
+  store.commit('updateShowConfirmation', true)
 }
 
 function removeConfirmation() {
-  showConfirmation.value = false
+  store.commit('updateShowConfirmation', false)
   termsAgreed.value = false
 }
 
@@ -356,7 +358,7 @@ function backClicked() {
       </div>
     </Transition>
     <div v-if="showConfirmation && appState === 'live'" class="terms-agreement">
-      <div class="all-products-title">I agree to <RouterLink to="/terms" class="btn-link">terms and conditions</RouterLink></div>
+      <div class="all-products-title agreement">I agree to <RouterLink to="/terms" class="btn-link">terms and conditions</RouterLink></div>
       <div class="checkbox-wrapper-19">
         <input type="checkbox" id="cbtest-19" v-model="termsAgreed"/>
         <label for="cbtest-19" class="check-box"></label>
@@ -396,9 +398,9 @@ function backClicked() {
     <!--<div class="divider" v-if="currentProductOrder && appState === 'live' && !showComingSoon"></div>-->
 
     <MahomesHeader v-if="appState !== 'live'"/>
-    <div v-if="!currentProductOrder && appState === 'live' && !showConfirmation" class="footer" :class="{'margin' : appState === 'live'}">
+    <!--<div v-if="!currentProductOrder && appState === 'live' && !showConfirmation" class="footer" :class="{'margin' : appState === 'live'}">
       <button class="btn-back-home" @click="backClicked()">BACK HOME</button>
-    </div>
+    </div>-->
     <div v-if="showConfirmation" class="footer footer-confirmation">
       <button class="btn-footer" @click="catchDeal()" :disabled="!termsAgreed">BUY</button>
       <button class="btn-footer green" @click="removeConfirmation()">GO BACK</button>
@@ -416,7 +418,7 @@ function backClicked() {
   top: 0;
   left: 0;
   background-image: url("/texture.png");
-  z-index: 110;
+  z-index: 205;
   opacity: 0.5;
   background-repeat: no-repeat;
   background-size: cover;
@@ -761,7 +763,7 @@ function backClicked() {
 
   .floaty-2 {
     background-color: var(--green-1);
-    bottom: -10px;
+    bottom: 5px;
     right: 0;
     animation: float 12s linear infinite;
   }
@@ -771,6 +773,11 @@ function backClicked() {
 .all-products-title {
   font-size: 25px;
   font-family: "ITC Souvenir";
+
+  &.agreement {
+    font-size: 18px;
+    margin-left: 10px;
+  }
 }
 
 .all-products-subtitle {
@@ -963,7 +970,7 @@ function backClicked() {
 
 .modal {
   position: fixed;
-  z-index: 105;
+  z-index: 210;
   width: 90%;
   min-height: 400px;
   top: 100px;
