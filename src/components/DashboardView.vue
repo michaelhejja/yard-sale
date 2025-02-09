@@ -146,6 +146,7 @@ h1 {
   justify-content: space-between;
   margin: 5px 0;
   font-size: 3vw;
+  border-bottom: 1px dashed grey;
 }
 
 .btn-save {

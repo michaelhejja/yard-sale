@@ -147,7 +147,7 @@ ul {
 
 .footer {
   position: relative;
-  height: 100px;
+  height: 120px;
   display: flex;
   justify-content: space-between;
 

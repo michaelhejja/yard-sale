@@ -826,7 +826,7 @@ function backClicked() {
 
 .footer {
   position: relative;
-  height: 100px;
+  height: 120px;
 
   &.footer-confirmation {
     display: flex;

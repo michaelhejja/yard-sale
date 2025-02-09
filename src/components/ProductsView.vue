@@ -202,7 +202,7 @@ function goBack() {
 
 .footer {
   position: relative;
-  height: 100px;
+  height: 120px;
 
   &::before {
     content: '';
