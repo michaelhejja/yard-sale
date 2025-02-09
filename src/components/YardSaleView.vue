@@ -232,6 +232,7 @@ function openModal(index) {
 }
 
 function showConfirmationState() {
+  window.scrollTo(0, 0)
   showConfirmation.value = true
 }
 
