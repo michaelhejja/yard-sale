@@ -341,6 +341,7 @@ function goBack() {
   font-size: 33.37px;
   text-align: left;
   margin: 15px 0 0 15px;
+  text-transform: uppercase;
 }
 
 .btn-close {
