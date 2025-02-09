@@ -7,7 +7,7 @@ onMounted(() => {
 
   var deadline = new Date(1739143800000);
   console.log(deadline)
-  var c = new Clock(deadline, function(){ //alert('countdown complete') });
+  var c = new Clock(deadline, function(){ });
   container.appendChild(c.el);
 })
 
