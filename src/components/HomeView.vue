@@ -7,7 +7,7 @@ import YardSaleService from '../services/YardSaleService'
 
 const router = useRouter()
 const products = ref([])
-const saleStarted = ref(false)
+const saleStarted = ref(true)
 
 const startTime = new Date(1739143800000)
 let countInterval
