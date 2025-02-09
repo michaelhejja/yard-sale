@@ -291,6 +291,7 @@ function goToProducts() {
   padding: 4px 20px;
   color: var(--black-2);
   text-wrap: nowrap;
+  text-transform: uppercase;
 
   &.beige {
     background-color: var(--beige-1);
