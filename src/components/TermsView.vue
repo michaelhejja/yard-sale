@@ -75,7 +75,7 @@ function productsClicked() {
     <div class="divider"></div>
     <div class="footer">
       <button class="btn-back-home" @click="backClicked()">GO BACK</button>
-      <button class="btn-back-home green" @click="productsClicked()">ALL ITEMS</button>
+      <!--<button class="btn-back-home green" @click="productsClicked()">ALL ITEMS</button>-->
     </div>
   </div>
 </template>
@@ -147,7 +147,7 @@ ul {
   position: relative;
   height: 120px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
 
   &::before {
     content: '';
