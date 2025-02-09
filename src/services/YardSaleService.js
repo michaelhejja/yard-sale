@@ -5,6 +5,10 @@ class YardSaleService {
     return http.get('/state')
   }
 
+  getAllOrders() {
+    return http.get('/orders')
+  }
+
   updateAppState(isActive, canPurchase, showComingSoon, currentProductIndex, currentDiscount) {
     return http.post(`/updateAppState`, {
       isActive: isActive,

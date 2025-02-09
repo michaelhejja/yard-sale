@@ -23,6 +23,7 @@ const orders = ref([])
 const currentProductIndex = ref(0)
 const canPurchase = ref(true)
 const showComingSoon = ref(false)
+const showConfirmation = ref(true)
 const currentDiscount = ref(null)
 const ws = ref(null)
 
@@ -35,8 +36,19 @@ const termsAgreed = ref(false)
 
 // Custom Message
 const customMessage = ref('')
-const customMessageColor = ref('red')
+const customMessageColor = ref('green')
 const showCustomMessage = ref(false)
+
+// Product Modal Data
+const showModal = ref(false)
+const currentIndex = ref(0)
+
+const limitedProducts = computed(() => {
+  if (products.value.length === 0) {
+    return null
+  }
+  return products.value.slice(0, 15)
+})
 
 const currentProductOrder = computed(() => {
   if (products.value.length === 0) {
@@ -53,6 +65,11 @@ const currentProductOrder = computed(() => {
 
 const discountPrice = computed(() => {
   if (products.value.length > 0) {
+    if (currentDiscount.value <= 0) {
+      const fullPrice = products.value[Number(currentProductIndex.value)].price
+      return Number(fullPrice).toFixed(2)
+    }
+
     const price = products.value[Number(currentProductIndex.value)].price || 0
     const discount = price * (currentDiscount.value / 100)
     const discountPrice = price - discount
@@ -70,6 +87,24 @@ const appState = computed(() => {
 const currentProductSoldOut = computed(() => {
   const numItemsLeft = products.value[currentProductIndex.value].inventory
   return numItemsLeft === 0
+})
+
+const productsTitle = computed(() => {
+  if (currentProductOrder.value) {
+    console.log(currentProductOrder)
+    return currentProductOrder.value.wasLocked ? 'Details will hit your inbox soon' : 'But don\'t worry...'
+  } else {
+    return 'We\'ve Got More'
+  }
+})
+
+const productsSubtitle = computed(() => {
+  if (currentProductOrder.value) {
+    console.log(currentProductOrder)
+    return currentProductOrder.value.wasLocked ? 'There\'s More Coming' : 'THERE’S MORE.'
+  } else {
+    return 'SEE WHAT’S NEXT'
+  }
 })
 
 onMounted(() => {
@@ -110,6 +145,10 @@ function createSocketConnection() {
       isActive.value = obj.message.isActive
       products.value = obj.message.products
       currentProductIndex.value = obj.message.currentProductIndex
+      if (currentProductIndex !== obj.message.currentProductIndex) {
+        showConfirmation.value = false
+        termsAgreed.value = false
+      }
       canPurchase.value = obj.message.canPurchase
       showComingSoon.value = obj.message.showComingSoon
       currentDiscount.value = obj.message.currentDiscount
@@ -139,6 +178,8 @@ function createSocketConnection() {
 function catchDeal() {
   console.log('CATCH THE DEAL!')
   window.scrollTo(0, 0)
+  showConfirmation.value = false
+  termsAgreed.value = false
   productIsLocked.value = true
   lockedProductIndex.value = currentProductIndex.value
   lockedDiscount.value = currentDiscount.value
@@ -181,7 +222,35 @@ function displayCustomMessage() {
   showCustomMessage.value = true
   setTimeout(() => {
     showCustomMessage.value = false
-  }, 4000)
+  }, 10000)
+}
+
+function openModal(index) {
+  currentIndex.value = index
+  showModal.value = true
+  console.log(products.value[index].name)
+}
+
+function showConfirmationState() {
+  showConfirmation.value = true
+}
+
+function removeConfirmation() {
+  showConfirmation.value = false
+  termsAgreed.value = false
+}
+
+function calculateDiscountPrice (price, discount) {
+  if (discount <= 0) {
+    return price.toFixed(2)
+  }
+  const discountAmount = price * (discount / 100)
+  const discountPrice = price - discountAmount
+  return discountPrice.toFixed(2)
+}
+
+function closeModal(index) {
+  showModal.value = false
 }
 
 function agreeToTerms() {
@@ -218,10 +287,10 @@ function backClicked() {
       <div class="message-bench-title">Thank You!</div>
     </div>
     <Transition name="slide">
-      <div v-if="!currentProductOrder || showComingSoon" class="product-showcase">
+      <div v-if="(!showConfirmation && !currentProductOrder) || showComingSoon" class="product-showcase">
         <div v-if="appState === 'live'" class="current-discount" :class="{'bgclear': showComingSoon}">
           <div class="current-discount-label">
-            A {{ currentDiscount }} YARD<br>PASS PLAY
+            {{ currentDiscount }} YARD<br>PASS PLAY
           </div>
           <img src="/icon-plus.svg" />
           <div class="current-discount-percent">
@@ -244,7 +313,7 @@ function backClicked() {
               </div>
             </div>
             <div class="divider"></div>
-            <div v-if="currentDiscount && currentDiscount > 0" class="price-discount">
+            <div class="price-discount">
               <div class="price-label">
                 NOW IT'S
               </div>
@@ -254,45 +323,84 @@ function backClicked() {
             </div>
           </div>
         </div>
-        <button v-if="appState === 'live'" class="btn-catch-deal" :disabled="showComingSoon" @click="catchDeal()">CATCH THIS DEAL</button>
+        <button v-if="appState === 'live'" class="btn-catch-deal" :disabled="showComingSoon" @click="showConfirmationState()">CATCH THIS DEAL</button>
+      </div>
+    </Transition>
+
+    <Transition name="flip">
+      <div v-if="showModal && products.length > 0" class="modal" :class="{'sold': products[currentIndex].inventory === 0}">
+        <div v-if="products[currentIndex].inventory === 0" class="modal-sold-sticker">SOLD</div>
+        <div class="modal-header">
+            <div class="modal-product-name">{{ products[currentIndex].name }}</div>
+            <button class="btn-close" @click="closeModal()"></button>
+        </div>
+        <div class="modal-product-image">
+          <img :src="`/${products[currentIndex].image2}`" alt="product" />
+        </div>
+        <div class="modal-product-description">{{ products[currentIndex].description }}</div>
+        <div class="modal-price-label">
+          THIS ITEM IS VALUED AT
+        </div>
+        <div class="modal-price-value">
+          ${{ products[currentIndex].price }}
+        </div>
       </div>
     </Transition>
 
     <Transition name="bounce">
-      <div v-if="currentProductOrder && appState === 'live' && !showComingSoon" class="product-locked">
-        <div v-if="currentProductOrder.wasLocked" class="current-discount-percent-label locked">{{ currentProductOrder?.discount || '' }}%<br>Off</div>
+      <div v-if="products.length > 0 && showConfirmation && appState === 'live'" class="confirmation">
+        <div class="current-discount-percent-label locked">${{ calculateDiscountPrice(products[currentProductIndex].price, currentDiscount) || '' }}</div>
+        <img :src="`/${products[currentProductIndex].image2}`" class="product-image" alt="product" />
+        <div class="locked-label green">ARE YOU SURE<br>YOU WANT TO<br>BUY THIS ITEM?</div>
+      </div>
+    </Transition>
+    <div v-if="showConfirmation && appState === 'live'" class="terms-agreement">
+      <div class="all-products-title">I agree to <RouterLink to="/terms" class="btn-link">terms and conditions</RouterLink></div>
+      <div class="checkbox-wrapper-19">
+        <input type="checkbox" id="cbtest-19" v-model="termsAgreed"/>
+        <label for="cbtest-19" class="check-box"></label>
+      </div>
+    </div>
+
+    <Transition name="bounce">
+      <div v-if="currentProductOrder && appState === 'live' && !showComingSoon && !showConfirmation" class="product-locked">
+        <div v-if="currentProductOrder.wasLocked" class="current-discount-percent-label locked">${{ calculateDiscountPrice(currentProductOrder?.product?.price, currentProductOrder?.discount) || '' }}</div>
         <img :src="`/${currentProductOrder.product.image2}`" class="product-image" alt="product" />
         <div v-if="!currentProductOrder.wasLocked" class="locked-label red">THIS DEAL WAS<br>INTERCEPTED!</div>
         <div v-else class="locked-label">YOU’VE LOCKED<br>THE DEAL!</div>
       </div>
     </Transition>
 
-    <div v-if="appState === 'paused' || !currentProductOrder || showComingSoon" class="all-products" @click="goToProducts()">
-      <div class="floaty-1">There's More</div>
-      <div class="floaty-2">All Products</div>
-      <div class="all-products-title">We’ve Got More</div>
-      <div class="all-products-subtitle">SEE WHAT’S NEXT</div>
+    <!--<div v-if="currentProductOrder && appState === 'live' && !showComingSoon" class="product-locked-text">
+      <div class="locked-message-top">{{ currentProductOrder.wasLocked ? 'Details will hit your inbox soon' : 'But don’t worry...' }}</div>
+      <div class="locked-message-bottom">{{ currentProductOrder.wasLocked ? 'There\'s More Coming Up' : 'THERE’S MORE.' }}</div>
+    </div>-->
+
+    <div v-if="appState !== 'closed' && !showConfirmation" class="all-products" :class="{'extra-margin': currentProductOrder || appState === 'paused'}">
+      <div v-if="!currentProductOrder" class="floaty-1">There's More</div>
+      <div v-if="!currentProductOrder" class="floaty-2">All Products</div>
+      <div class="all-products-title">{{ productsTitle }}</div>
+      <div class="all-products-subtitle">{{ productsSubtitle }}</div>
       <div v-if="products.length > 0" class="all-products-container">
         <div class="product-banner">
-          <div v-for="product in products"class="product-banner-item">
+          <div v-for="(product, index) in limitedProducts" class="product-banner-item" :key="`product_1_${index}`" @click="openModal(index)">
             <img :src="`/${product.image}`" class="product-image-slider" alt="product" />
           </div>
-          <div v-for="product in products"class="product-banner-item">
+          <div v-for="(product, index) in limitedProducts" class="product-banner-item" :key="`product_2_${index}`" @click="openModal(index)">
             <img :src="`/${product.image}`" class="product-image-slider" alt="product" />
           </div>
         </div>
       </div>
     </div>
-    <div class="divider" v-if="currentProductOrder && appState === 'live' && !showComingSoon"></div>
-
-    <div v-if="currentProductOrder && appState === 'live' && !showComingSoon" class="product-locked-text">
-      <div class="locked-message-top">{{ currentProductOrder.wasLocked ? 'The info is in the endzone.' : 'But don’t worry...' }}</div>
-      <div class="locked-message-bottom">{{ currentProductOrder.wasLocked ? '(YOUR EMAIL INBOX)' : 'THERE’S MORE.' }}</div>
-    </div>
+    <!--<div class="divider" v-if="currentProductOrder && appState === 'live' && !showComingSoon"></div>-->
 
     <MahomesHeader v-if="appState !== 'live'"/>
-    <div class="footer" :class="{'margin' : appState === 'live'}">
+    <div v-if="!currentProductOrder && appState === 'live' && !showConfirmation" class="footer" :class="{'margin' : appState === 'live'}">
       <button class="btn-back-home" @click="backClicked()">BACK HOME</button>
+    </div>
+    <div v-if="showConfirmation" class="footer footer-confirmation">
+      <button class="btn-footer" @click="catchDeal()" :disabled="!termsAgreed">BUY</button>
+      <button class="btn-footer green" @click="removeConfirmation()">GO BACK</button>
     </div>
   </div>
 </template>
@@ -307,7 +415,7 @@ function backClicked() {
   top: 0;
   left: 0;
   background-image: url("/texture.png");
-  z-index: 100;
+  z-index: 110;
   opacity: 0.5;
   background-repeat: no-repeat;
   background-size: cover;
@@ -423,6 +531,12 @@ function backClicked() {
 
     &::after {
       background-image: url('/star-green-2.svg');
+      width: 128%;
+      height: 170%;
+      z-index: -1;
+      top: -47%;
+      left: -23px;
+      transform: scaleX(1.2);
     }
   }
 }
@@ -442,7 +556,7 @@ function backClicked() {
   }
 }
 
-.product-locked {
+.product-locked, .confirmation {
   position: relative;
   width: 100%;
   object-fit: contain;
@@ -520,7 +634,7 @@ function backClicked() {
 
 .locked-message-bottom {
   font-size: 48px;
-  text-wrap: nowrap;
+  text-transform: uppercase;
 
   @media only screen and (max-width: 429px) {
     font-size: 45px;
@@ -529,17 +643,18 @@ function backClicked() {
 
 .product-name {
   font-size: 33px;
-  margin: 15px
+  margin: 15px;
+  text-transform: uppercase;
 }
 
 .product {
-  margin: 0 25px;
+  margin: 0px 25px;
+  display: flex;
 }
 
 .product-image {
-  width: 100%;
-  height: auto;
-  max-height: 600px;
+  max-height: 205px;
+  margin: 0px auto;
 
   &.grey {
     filter: grayscale(1);
@@ -549,7 +664,7 @@ function backClicked() {
 .product-description {
   font-family: "ITC Souvenir";
   font-size: 15px;
-  margin: 15px 15px 0 15px;
+  margin: 0 15px 0 15px;
   padding-bottom: 15px;
   border-bottom: 2px solid var(--black-1);
 }
@@ -620,6 +735,10 @@ function backClicked() {
   position: relative;
   margin-top: 20px;
 
+  &.extra-margin {
+    margin-top: 75px;
+  }
+
   .floaty-1, .floaty-2 {
     font-family: "ITC Souvenir";
     border-radius: 6px;
@@ -649,12 +768,12 @@ function backClicked() {
 }
 
 .all-products-title {
-  font-size: 27px;
+  font-size: 25px;
   font-family: "ITC Souvenir";
 }
 
 .all-products-subtitle {
-  font-size: 48px;
+  font-size: 46px;
 }
 
 .all-products-container {
@@ -709,6 +828,11 @@ function backClicked() {
   position: relative;
   height: 100px;
 
+  &.footer-confirmation {
+    display: flex;
+    justify-content: space-between;
+  }
+
   &::before {
     content: '';
     background-color: var(--black-1);
@@ -721,6 +845,31 @@ function backClicked() {
 
   &.margin {
     margin-top: 30px;
+  }
+}
+
+.btn-footer {
+  font-size: 42px;
+  background-color: var(--orange-1);
+  border-radius: 6px;
+  border: 2px solid var(--black-1);
+  text-wrap: nowrap;
+  padding: 1px 10px 0px 8px;
+  line-height: 0;
+  height: 57px;
+  width: 49%;
+  transition: opacity 0.4s;
+
+  &.green {
+    background-color: var(--green-1);
+  }
+
+  @media only screen and (max-width: 429px) {
+    font-size: 38px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
   }
 }
 
@@ -810,4 +959,224 @@ function backClicked() {
     background-color: var(--red-1);
   }
 }
+
+.modal {
+  position: fixed;
+  z-index: 105;
+  width: 90%;
+  min-height: 400px;
+  top: 100px;
+  left: 5%;
+  background-color: var(--green-1);
+  border-radius: 10px;
+  border: 2px solid var(--black-1);
+
+  &.sold {
+    background-color: var(--orange-1);
+  }
+}
+
+.modal-sold-sticker {
+  background-color: var(--red-1);
+  border-radius: 10px;
+  border: 2px solid var(--black-1);
+  position: absolute;
+  font-size: 48px;
+  padding: 10px 15px;
+  transform: rotate(-21deg);
+  top: 25px;
+  left: 15px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-product-name {
+  width: 80%;
+  font-size: 33.37px;
+  text-align: left;
+  margin: 15px 0 0 15px;
+}
+
+.btn-close {
+  width: 43px;
+  height: 43px;
+  background-color: transparent;
+  background-image: url('/close.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin: 15px 15px 0 0;
+}
+
+.modal-product-image {
+    width: 80%;
+    margin: 0 auto;
+    object-fit: cover;
+
+    img {
+      width:100%; height:100%;
+    }
+}
+
+.modal-product-description {
+  text-align: left;
+  margin: 0 15px;
+  font-family: "ITC Souvenir";
+  font-size: 15px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--black-1);
+}
+
+.modal-price-label {
+  text-align: left;
+  font-size: 18.33px;
+  margin-bottom: 2px;
+  margin-left: 15px;
+  margin-top: 15px;
+}
+
+.modal-price-value {
+  text-align: left;
+  font-size: 33px;
+  font-family: "ITC Souvenir";
+  font-weight: 700;
+  letter-spacing: 0px;
+  margin: 0 15px 15px 15px;
+}
+
+.terms-agreement {
+  height: 120px;
+  margin-top: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 90%;
+}
+  .checkbox-wrapper-19 {
+    box-sizing: border-box;
+    --background-color: #fff;
+    --checkbox-height: 25px;
+  }
+
+  @-moz-keyframes dothabottomcheck-19 {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: calc(var(--checkbox-height) / 2);
+    }
+  }
+
+  @-webkit-keyframes dothabottomcheck-19 {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: calc(var(--checkbox-height) / 2);
+    }
+  }
+
+  @keyframes dothabottomcheck-19 {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: calc(var(--checkbox-height) / 2);
+    }
+  }
+
+  @keyframes dothatopcheck-19 {
+    0% {
+      height: 0;
+    }
+    50% {
+      height: 0;
+    }
+    100% {
+      height: calc(var(--checkbox-height) * 1.2);
+    }
+  }
+
+  @-webkit-keyframes dothatopcheck-19 {
+    0% {
+      height: 0;
+    }
+    50% {
+      height: 0;
+    }
+    100% {
+      height: calc(var(--checkbox-height) * 1.2);
+    }
+  }
+
+  @-moz-keyframes dothatopcheck-19 {
+    0% {
+      height: 0;
+    }
+    50% {
+      height: 0;
+    }
+    100% {
+      height: calc(var(--checkbox-height) * 1.2);
+    }
+  }
+
+  .checkbox-wrapper-19 input[type=checkbox] {
+    display: none;
+  }
+
+  .checkbox-wrapper-19 .check-box {
+    height: var(--checkbox-height);
+    width: var(--checkbox-height);
+    background-color: transparent;
+    border: calc(var(--checkbox-height) * .1) solid #000;
+    border-radius: 5px;
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    transition: border-color ease 0.2s;
+    cursor: pointer;
+    transform: scale(1.6);
+  }
+  .checkbox-wrapper-19 .check-box::before,
+  .checkbox-wrapper-19 .check-box::after {
+    box-sizing: border-box;
+    position: absolute;
+    height: 0;
+    width: calc(var(--checkbox-height) * .2);
+    background-color: #34b93d;
+    display: inline-block;
+    transform-origin: left top;
+    border-radius: 5px;
+    content: " ";
+    transition: opacity ease 0.5;
+  }
+  .checkbox-wrapper-19 .check-box::before {
+    top: calc(var(--checkbox-height) * .72);
+    left: calc(var(--checkbox-height) * .41);
+    box-shadow: 0 0 0 calc(var(--checkbox-height) * .05) var(--background-color);
+    transform: rotate(-135deg);
+  }
+  .checkbox-wrapper-19 .check-box::after {
+    top: calc(var(--checkbox-height) * .37);
+    left: calc(var(--checkbox-height) * .05);
+    transform: rotate(-45deg);
+  }
+
+  .checkbox-wrapper-19 input[type=checkbox]:checked + .check-box,
+  .checkbox-wrapper-19 .check-box.checked {
+    border-color: #34b93d;
+  }
+  .checkbox-wrapper-19 input[type=checkbox]:checked + .check-box::after,
+  .checkbox-wrapper-19 .check-box.checked::after {
+    height: calc(var(--checkbox-height) / 2);
+    animation: dothabottomcheck-19 0.2s ease 0s forwards;
+  }
+  .checkbox-wrapper-19 input[type=checkbox]:checked + .check-box::before,
+  .checkbox-wrapper-19 .check-box.checked::before {
+    height: calc(var(--checkbox-height) * 1.2);
+    animation: dothatopcheck-19 0.4s ease 0s forwards;
+  }
 </style>

@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 function backClicked() {
-  router.push('/')
+  router.back()
 }
 
 function productsClicked() {
@@ -76,7 +76,7 @@ function productsClicked() {
     </p>
     <div class="divider"></div>
     <div class="footer" :class="{'margin' : appState === 'live'}">
-      <button class="btn-back-home" @click="backClicked()">GO HOME</button>
+      <button class="btn-back-home" @click="backClicked()">GO BACK</button>
       <button class="btn-back-home green" @click="productsClicked()">ALL ITEMS</button>
     </div>
   </div>

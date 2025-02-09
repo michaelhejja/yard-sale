@@ -11,6 +11,11 @@ const products = ref([])
 const customMessage = ref('')
 
 onMounted(() => {
+  const overlay = document.querySelector('.non-mobile-overlay')
+  overlay.classList.add('hide')
+  const app = document.querySelector('.app-container')
+  app.classList.add('full')
+
   getData()
 
   setInterval(() => {
@@ -57,7 +62,7 @@ function sendMessage() {
         <input v-model="canPurchase" type="checkbox" />
     </div>
     <div class="form-row">
-        <label>Show Coming Soon</label>
+        <label>Sold Out</label>
         <input v-model="showComingSoon" type="checkbox" />
     </div>
     <div class="form-row">
@@ -72,7 +77,7 @@ function sendMessage() {
     <div class="form-row message">
         <div class="message">
           <label>Custom Message</label>
-          <input class="message" v-model="customMessage" type="text" />
+          <textarea class="message" v-model="customMessage" />
         </div>
         <button class="btn-message" @click="sendMessage()">Send</button>
     </div>
@@ -124,15 +129,15 @@ h1 {
 
     &.message {
       padding-top: 15px;
+      padding-bottom: 50px;
       border-top: 2px dashed var(--black-1);
       margin-top: 30px;
+      align-items: flex-end;
     }
 }
 
 .products-container {
   margin-top: 65px;
-
-
 }
 
 .product {
@@ -140,6 +145,7 @@ h1 {
   text-transform: uppercase;
   justify-content: space-between;
   margin: 5px 0;
+  font-size: 3vw;
 }
 
 .btn-save {
@@ -147,15 +153,23 @@ h1 {
   background-color: var(--green-1);
   border-radius: 10px;
   border: 2px solid var(--black-1);
+  border-bottom: 6px solid var(--black-1);
   text-wrap: nowrap;
   width: 100%;
   padding: 5px 15px;
   margin-top: 10px;
+
+  &:active {
+    transform: translateY(2px);
+    border-bottom: 2px solid var(--black-1);
+    margin-top: 14px;
+  }
 }
 
 .message {
-  font-size: 26px;
+  font-size: 20px;
   width: 100%;
+  height: 140px;
   margin-right: 20px;
 }
 
@@ -164,10 +178,17 @@ h1 {
   background-color: var(--green-1);
   border-radius: 10px;
   border: 2px solid var(--black-1);
+  border-bottom: 6px solid var(--black-1);
   text-wrap: nowrap;
   width: 100px;
   height: 60px;
   padding: 5px 15px;
   margin-top: 10px;
+
+  &:active {
+    transform: translateY(2px);
+    border-bottom: 2px solid var(--black-1);
+    margin-top: 14px;
+  }
 }
 </style>

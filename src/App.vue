@@ -21,6 +21,10 @@ body, html {
   width: 100%;
   max-width: 450px;
   margin: 0 auto;
+
+  &.full {
+    max-width: 100%;
+  }
 }
 
 .non-mobile-overlay {
@@ -40,6 +44,10 @@ body, html {
 
   @media only screen and (min-width: 640px) {
     display: flex;
+
+    &.hide {
+      display: none;
+    }
   }
 }
 

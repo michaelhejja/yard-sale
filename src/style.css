@@ -16,6 +16,7 @@
   --black-2: #101010;
   --red-1: #ED3A3A;
   --green-1: #6AFF49;
+  --green-2: #307d1e;
   --orange-1: #FFDB49;
   --beige-1: #F5F5E8;
 
@@ -51,7 +52,7 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--red-1);
   text-decoration: inherit;
 }
 a:hover {
@@ -207,5 +208,25 @@ button:focus-visible {
   }
   100% {
     transform: scale(1) translate(0, 0) rotateZ(0deg);
+  }
+}
+
+.flip-enter-active {
+  animation: flip-in 0.2s;
+}
+.flip-leave-active {
+  animation: flip-in 0.2s reverse;
+}
+@keyframes flip-in {
+  0% {
+    opacity: 0.2;
+    transform: scale(0) rotateX(45deg) rotateZ(25deg);
+  }
+  50% {
+    transform: scale(1.3) rotateX(60deg) rotateZ(40deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateX(0deg) rotateZ(0deg);
   }
 }

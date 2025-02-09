@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import MahomesHeader from './MahomesHeader.vue'
 import YardSaleService from '../services/YardSaleService'
@@ -19,6 +19,13 @@ onMounted(() => {
   setTimeout(() => {
     showInfo.value = false
   }, 5000)
+})
+
+const limitedProducts = computed(() => {
+  if (products.value.length === 0) {
+    return null
+  }
+  return products.value.slice(0, 15)
 })
 
 function openModal(index) {
@@ -76,10 +83,10 @@ function goBack() {
   <div class="all-products">
     <div v-if="products.length > 0" class="all-products-container">
       <div class="product-banner slow">
-        <div v-for="(product, index) in products"class="product-banner-item" @click="openModal(index)">
+        <div v-for="(product, index) in limitedProducts"class="product-banner-item" @click="openModal(index)">
           <img :src="`/${product.image}`" class="product-image-slider" alt="product"/>
         </div>
-        <div v-for="(product, index) in products"class="product-banner-item" @click="openModal(index)">
+        <div v-for="(product, index) in limitedProducts"class="product-banner-item" @click="openModal(index)">
           <img :src="`/${product.image}`" class="product-image-slider" alt="product" />
         </div>
       </div>
@@ -88,10 +95,10 @@ function goBack() {
   <div class="all-products">
     <div v-if="products.length > 0" class="all-products-container">
       <div class="product-banner reverse">
-        <div v-for="(product, index) in products"class="product-banner-item" @click="openModal(index)">
+        <div v-for="(product, index) in limitedProducts"class="product-banner-item" @click="openModal(index)">
           <img :src="`/${product.image}`" class="product-image-slider" alt="product" />
         </div>
-        <div v-for="(product, index) in products"class="product-banner-item" @click="openModal(index)">
+        <div v-for="(product, index) in limitedProducts"class="product-banner-item" @click="openModal(index)">
           <img :src="`/${product.image}`" class="product-image-slider" alt="product" />
         </div>
       </div>
@@ -100,10 +107,10 @@ function goBack() {
   <div class="all-products">
     <div v-if="products.length > 0" class="all-products-container">
       <div class="product-banner">
-        <div v-for="(product, index) in products"class="product-banner-item" @click="openModal(index)">
+        <div v-for="(product, index) in limitedProducts"class="product-banner-item" @click="openModal(index)">
           <img :src="`/${product.image}`" class="product-image-slider" alt="product" />
         </div>
-        <div v-for="(product, index) in products"class="product-banner-item" @click="openModal(index)">
+        <div v-for="(product, index) in limitedProducts"class="product-banner-item" @click="openModal(index)">
           <img :src="`/${product.image}`" class="product-image-slider" alt="product" />
         </div>
       </div>
@@ -112,10 +119,10 @@ function goBack() {
   <div class="all-products">
     <div v-if="products.length > 0" class="all-products-container">
       <div class="product-banner reverse slow">
-        <div v-for="(product, index) in products"class="product-banner-item" @click="openModal(index)">
+        <div v-for="(product, index) in limitedProducts"class="product-banner-item" @click="openModal(index)">
           <img :src="`/${product.image}`" class="product-image-slider" alt="product" />
         </div>
-        <div v-for="(product, index) in products"class="product-banner-item" @click="openModal(index)">
+        <div v-for="(product, index) in limitedProducts"class="product-banner-item" @click="openModal(index)">
           <img :src="`/${product.image}`" class="product-image-slider" alt="product" />
         </div>
       </div>
@@ -124,10 +131,10 @@ function goBack() {
   <div class="all-products">
     <div v-if="products.length > 0" class="all-products-container">
       <div class="product-banner slow">
-        <div v-for="(product, index) in products"class="product-banner-item" @click="openModal(index)">
+        <div v-for="(product, index) in limitedProducts"class="product-banner-item" @click="openModal(index)">
           <img :src="`/${product.image}`" class="product-image-slider" alt="product" />
         </div>
-        <div v-for="(product, index) in products"class="product-banner-item" @click="openModal(index)">
+        <div v-for="(product, index) in limitedProducts"class="product-banner-item" @click="openModal(index)">
           <img :src="`/${product.image}`" class="product-image-slider" alt="product" />
         </div>
       </div>

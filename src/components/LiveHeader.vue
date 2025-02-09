@@ -36,10 +36,10 @@ const title = computed(() => {
 
 .label {
   line-height: 1;
-  font-size: 48px;
+  font-size: 26px;
   background-color: var(--red-1);
   padding: 5px 15px;
-  border-radius: 10px;
+  border-radius: 6px;
   border: 2px solid var(--black-1);
 
   &.bench {
