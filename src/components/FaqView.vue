@@ -27,8 +27,10 @@ function productsClicked() {
 
 
     <div class="title">How does the Patrick Mahomes Yard Sale work?</div>
-    <p>Every time Patrick Mahomes completes a pass during the Super Bowl, the gained yardage determines a featured product's discount percentage. The discount is reset for every completed pass. For instance:</p>
-    <p>If Patrick Mahomes completes a 15-yard pass, the featured product is now 15% off. If Patrick’s next completed pass is a 3-yard pass, the same featured product is now 3% off. </p>
+
+    <p>Every time Patrick Mahomes completes a pass during the Super Bowl, the gained yardage determines a featured product's discount percentage. The discount is reset every play.</p>
+    <p>For instance:</p>
+    <p>If Patrick Mahomes completes a 15-yard pass, the featured product is now 15% off. If Patrick’s next completed pass is a 3-yard pass, the same featured product is now 3% off. If he runs the ball, the discount is now 0%.</p>
     <p>Participants submit their email for a chance to purchase one of the featured products at the final discounted price. If you’re selected for the discount, you’ll be notified via email to complete your check-out.</p>
     <div class="divider"></div>
 
@@ -39,10 +41,6 @@ function productsClicked() {
     <div class="title">What happens if I catch a deal?</div>
     <p>If you catch a deal, you will need to enter your email address to be entered for a chance to purchase the product at the discounted price. </p>
     <p>After the Super Bowl, those who caught a deal will be contacted within 48 hours with details on how to claim their purchase. If 48 hours elapse without the participant taking action, another participant will be selected.</p>
-    <div class="divider"></div>
-
-    <div class="title">Can I enter multiple times?</div>
-    <p>You can enter once per product. Each new product introduced during the game is another chance to enter.</p>
     <div class="divider"></div>
 
     <div class="title">Can I enter multiple times?</div>
