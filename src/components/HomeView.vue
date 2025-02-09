@@ -10,7 +10,6 @@ const products = ref([])
 const saleStarted = ref(false)
 
 const startTime = new Date(1739143800000)
-// const startTime = new Date(1739032200000)
 let countInterval
 
 onMounted(() => {
@@ -32,7 +31,7 @@ onUnmounted(() => {
 function checkSaleStarted() {
   const now = Date.now()
   saleStarted.value = now > startTime
-  console.log('Have we Started?', now > startTime)
+  // console.log('Have we Started?', now > startTime)
 }
 
 function goToSale() {
@@ -50,8 +49,8 @@ function goToProducts() {
 </script>
 
 <template>
-  <div class="texture-overlay"></div>
   <div class="home">
+    <div class="texture-overlay"></div>
     <CountDown v-if="!saleStarted"/>
     <MahomesHeader />
     <div class="home-hero">
@@ -63,7 +62,7 @@ function goToProducts() {
       <div class="hero-footer-item red">We Lose!</div>
     </div>
 
-    <button @click="goToSale()" class="btn-letsgo"></button>
+    <button v-if="saleStarted" @click="goToSale()" class="btn-letsgo"></button>
 
     <div class="floaty-container" @click="goToProducts()">
         <div class="floaty"><img src="/arrow-1.png"/></div>
@@ -119,7 +118,6 @@ function goToProducts() {
       </div>
     </div>
   </div>
-  </div>
   
   <div class="info-container">
     <div class="info-panel" @click="goToFaqs()">
@@ -130,6 +128,7 @@ function goToProducts() {
       <div class="hero-footer-item red info-label label-2">FAQs</div>
     </div>
   </div>
+</div>
     
 </template>
 
