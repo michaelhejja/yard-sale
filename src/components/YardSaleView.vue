@@ -23,7 +23,7 @@ const orders = ref([])
 const currentProductIndex = ref(0)
 const canPurchase = ref(true)
 const showComingSoon = ref(false)
-const showConfirmation = ref(true)
+const showConfirmation = ref(false)
 const currentDiscount = ref(null)
 const ws = ref(null)
 
