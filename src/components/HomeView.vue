@@ -288,7 +288,7 @@ function goToProducts() {
   font-size: 17px;
   font-weight: 600;
   border-radius: 6px;
-  padding: 4px 20px;
+  padding: 4px 15px;
   color: var(--black-2);
   text-wrap: nowrap;
   text-transform: uppercase;
