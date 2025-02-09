@@ -1146,7 +1146,8 @@ function backClicked() {
     box-sizing: border-box;
     transition: border-color ease 0.2s;
     cursor: pointer;
-    transform: scale(1.6);
+    transform: scale(1.4);
+    margin-left: 10px;
   }
   .checkbox-wrapper-19 .check-box::before,
   .checkbox-wrapper-19 .check-box::after {
