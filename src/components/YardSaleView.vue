@@ -106,7 +106,7 @@ const productsSubtitle = computed(() => {
 })
 
 onMounted(() => {
-  createSocketConnection()
+  // createSocketConnection()
 })
 
 function createSocketConnection() {
@@ -271,7 +271,7 @@ function backClicked() {
 
 <template>
   <div class="content">
-    <EmailGate v-if="!userEmail" @submitEmail="saveEmail" />
+    <!--<EmailGate v-if="!userEmail" @submitEmail="saveEmail" />-->
 
     <Transition name="flip">
       <div v-if="showCustomMessage" class="custom-message" :class="customMessageColor">{{ customMessage }}</div>
