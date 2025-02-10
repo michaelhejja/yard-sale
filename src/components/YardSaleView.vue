@@ -14,7 +14,7 @@ const userID = ref('undefined')
 const userEmail = ref(null)
 const userDatabaseID = ref(null)
 const title = ref('')
-const isActive = ref(true)
+const isActive = ref(false)
 const products = ref([])
 const orders = ref([])
 const currentProductIndex = ref(0)
@@ -78,9 +78,9 @@ const discountPrice = computed(() => {
 })
 
 const appState = computed(() => {
-  if (isActive.value === true) {
-    return canPurchase.value === true ? 'live' : 'paused'
-  }
+  // if (isActive.value === true) {
+  //   return canPurchase.value === true ? 'live' : 'paused'
+  // }
   return 'closed'
 })
 
