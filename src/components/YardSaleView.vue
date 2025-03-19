@@ -78,9 +78,9 @@ const discountPrice = computed(() => {
 })
 
 const appState = computed(() => {
-  // if (isActive.value === true) {
-  //   return canPurchase.value === true ? 'live' : 'paused'
-  // }
+  if (isActive.value === true) {
+    return canPurchase.value === true ? 'live' : 'paused'
+  }
   return 'closed'
 })
 
@@ -106,7 +106,7 @@ const productsSubtitle = computed(() => {
 })
 
 onMounted(() => {
-  // createSocketConnection()
+  createSocketConnection()
 })
 
 function createSocketConnection() {
@@ -136,6 +136,7 @@ function createSocketConnection() {
 
   // Listen for websocket messages
   wssWebSocket.addEventListener("message", (event) => {
+    console.log(JSON.parse(event.data))
 
     const obj = JSON.parse(event.data)
     if (obj.type === 'state') {
